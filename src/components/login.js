@@ -1,12 +1,63 @@
 import React from "react";
 import Header from "./Header";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Validate } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase.mjs";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const toggleSignIn = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const email = useRef(null);
+  const password = useRef(null);
+  const number = useRef(null);
+
+  const handleButtonClick = () => {
+    const emailValue = email.current.value;
+    const passwordValue = password.current.value;
+    const numberValue = isSignIn ? null : number.current.value;
+
+    const message = Validate(emailValue, passwordValue, numberValue);
+    setErrorMessage(message);
+    if (message) return;
+
+    if (!isSignIn) {
+      // Sign Up logic
+      createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " - " + errorMessage);
+        });
+    } else {
+      // Sign In logic
+      signInWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = "user not found.Please Sign Up";
+          setErrorMessage(errorMessage);
+        });
+    }
   };
 
   return (
@@ -20,7 +71,10 @@ const Login = () => {
         />
       </div>
       <div className="absolute inset-0 flex justify-center items-center">
-        <form className="py-9 px-12 bg-black w-96 rounded-lg shadow-lg text-white bg-opacity-80 flex justify-center items-center flex-col">
+        <form
+          className="py-9 px-12 bg-black w-96 rounded-lg shadow-lg text-white bg-opacity-80 flex justify-center items-center flex-col"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <h1 className="font-bold text-3xl py-3 ">
             {isSignIn ? "Sign In" : "Sign Up"}
           </h1>
@@ -28,33 +82,42 @@ const Login = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700"
+              className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700 bg-opacity-40"
             />
           )}
           {!isSignIn && (
             <input
+              ref={number}
               type="tel"
               placeholder="Phone Number"
-              className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700"
+              className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700 bg-opacity-40"
             />
           )}
           <input
+            ref={email}
             type="text"
             placeholder="Email Address"
-            className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700"
+            className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700 bg-opacity-40"
           />
           <input
+            ref={password}
             type="password"
             placeholder="Password"
-            className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700"
+            className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700 bg-opacity-40"
           />
-          <button className="p-[6px] mx-1 my-2 w-[90%] text-white rounded bg-red-600 text-sm">
+          <div className="flex w-[90%]">
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          </div>
+          <button
+            className="p-[6px] mx-1 my-2 w-[90%] text-white rounded bg-red-600 text-sm"
+            onClick={handleButtonClick}
+          >
             {isSignIn ? "Sign In" : "Sign Up"}
           </button>
-          <div className="  w-[90%] my-4 text-sm font-sans cursor-pointer ">
+          <div className="w-[90%] my-4 text-sm font-sans cursor-pointer ">
             <p onClick={toggleSignIn}>
               {isSignIn
-                ? "New to Netflix?Sign Up Now"
+                ? "New to Netflix? Sign Up Now"
                 : "Already Registered? Sign In Now."}
             </p>
           </div>
@@ -65,5 +128,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// for managing the form where form has many input fields we can use external library such as formik .js

@@ -5,12 +5,18 @@ import { Validate } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase.mjs";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleSignIn = () => {
     setIsSignIn(!isSignIn);
@@ -19,6 +25,7 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const number = useRef(null);
+  const name = useRef(null);
 
   const handleButtonClick = () => {
     const emailValue = email.current.value;
@@ -43,13 +50,34 @@ const Login = () => {
           const errorMessage = error.message;
           setErrorMessage(errorCode + " - " + errorMessage);
         });
+      navigate("/browse");
     } else {
       // Sign In logic
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          updateProfile(auth.currentUser, {
+            displayName: "name.current.value",
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          })
+            .then(() => {
+              // Profile updated!
+              const { uid, email, displayName } = auth.currentUser;
+              // ...
+              dispatch(
+                addUser({ uid: uid, email: email, displayName: displayName })
+              );
+              navigate("/browse");
+              // ...
+            })
+            .catch((error) => {
+              // An error occurred
+              setErrorMessage(error.message);
+              // ...
+            });
           console.log(user);
+
           // ...
         })
         .catch((error) => {
@@ -80,6 +108,7 @@ const Login = () => {
           </h1>
           {!isSignIn && (
             <input
+              ref={name}
               type="text"
               placeholder="Full Name"
               className="px-3 py-2 mx-1 w-[90%] rounded my-2 bg-gray-700 bg-opacity-40"

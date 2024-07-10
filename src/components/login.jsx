@@ -7,15 +7,13 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../utils/firebase.mjs";
+import { auth } from "../utils/firebase.jsx";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const toggleSignIn = () => {
@@ -50,7 +48,6 @@ const Login = () => {
           const errorMessage = error.message;
           setErrorMessage(errorCode + " - " + errorMessage);
         });
-      navigate("/browse");
     } else {
       // Sign In logic
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
@@ -68,7 +65,6 @@ const Login = () => {
               dispatch(
                 addUser({ uid: uid, email: email, displayName: displayName })
               );
-              navigate("/browse");
               // ...
             })
             .catch((error) => {
@@ -76,7 +72,6 @@ const Login = () => {
               setErrorMessage(error.message);
               // ...
             });
-          console.log(user);
 
           // ...
         })

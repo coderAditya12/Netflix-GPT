@@ -29,6 +29,7 @@
 - update the store with trailer video data
 - embeded youtube video and make it autoplay and mute
 - tailwind classes to make main container look awesome
+- Build secondary component
 
 # features
 

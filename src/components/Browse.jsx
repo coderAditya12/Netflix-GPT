@@ -7,8 +7,11 @@ import Popular from "../hooks/Popular";
 import useTrendingMovie from "../hooks/trending";
 import useUpComing from "../hooks/upcoming";
 import useTvShows from "../hooks/useTvShows";
+import GptSearch from "./GptSearchPage";
+import { useSelector } from "react-redux";
 
 const Browse = () => {
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   useNowPlaying();
   Popular();
   useTrendingMovie();
@@ -17,8 +20,15 @@ const Browse = () => {
   return (
     <div>
       <Header />
-      <MainContainer />
-      <SecondaryContainer />
+      {showGptSearch ? (
+        <GptSearch />
+      ) : (
+        <>
+          <MainContainer />
+          <SecondaryContainer />
+        </>
+      )}
+
       {/* 
       MainContainer
        - videoBackground

@@ -22,3 +22,5 @@ export const supported_languages = [
     name: "हिंदी",
   },
 ];
+
+export const GEMINI_API = process.env.REACT_APP_GEMINI_API_KEY;

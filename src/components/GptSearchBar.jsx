@@ -1,23 +1,51 @@
 import React, { useRef } from "react";
 import language from "../utils/languageConstants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { options } from "../utils/constants";
+import { addGptResult } from "../utils/GptSlice";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const GptSearchBar = () => {
+  const dispatch = useDispatch();
   const langKey = useSelector((store) => store.config.lang);
   const searchText = useRef(null);
-  const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+  const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+
+  //search movie in TMDB
+  const searchMovie = async (movieName) => {
+    const data = await fetch(
+      "https://api.themoviedb.org/3/search/movie?query=" +
+        movieName +
+        "&include_adult=false&language=en-US&page=1",
+      options
+    );
+    const json = await data.json();
+    return json;
+  };
   const handleSearch = async () => {
     console.log(searchText.current.value);
     // make an api call to gemini to get movie result
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = "Write a story about a magic backpack.";
+    const geminiQuery =
+      "Act as a Movie Recommendation system and suggest some movies for the query :" +
+      searchText.current.value +
+      "only give me names of 5 movies ,comma separated like the example result given ahead.Example Result :Gadar,Sholay,Don,golmaal,masti";
+    const prompt = geminiQuery;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     console.log(text);
+
+    const movieList = text.split(",");
+    console.log(movieList);
+
+    const promiseArray = movieList.map((movie) => searchMovie(movie));
+    console.log(promiseArray);
+    const tmdbResult = await Promise.all(promiseArray);
+    console.log(tmdbResult);
+    dispatch(addGptResult({ movieResult: tmdbResult, movieName: movieList }));
   };
   return (
     <div className="pt-[7%] flex justify-center">

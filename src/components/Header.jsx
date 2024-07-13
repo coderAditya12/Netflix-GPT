@@ -50,10 +50,10 @@ const Header = () => {
   };
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   return (
-    <div className="absolute px-8 py-2  bg-gradient-to-b from-black to-transparent w-full  z-10 flex justify-between items-center bg-opacity-40">
+    <div className="absolute px-8 py-2  bg-gradient-to-b from-black to-transparent w-full  z-10 flex  flex-col md:flex-row justify-between items-center bg-opacity-40 bg-black sm:bg-blue-900 md:bg-green-900">
       <img className="w-40" src={LOGO} alt="logo" />
       {user && (
-        <div className="flex items-center px-2">
+        <div className="flex items-center px-2 justify-between w-[70%] md:w-auto ">
           {showGptSearch && (
             <select
               className="p-2 m-2 bg-gray-600 text-white rounded-lg bg-opacity-60"
@@ -67,20 +67,20 @@ const Header = () => {
             </select>
           )}
           <button
-            className="cursor-pointer inline-flex items-center rounded-full px-7 py-2 text-xl font-mono font-semibold text-rose-600 hover:text-white border-2 border-rose-600
-hover:bg-rose-600 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75  duration-300  focus:bg-transparent"
+            className="cursor-pointer inline-flex items-center rounded-full px-6 py-1 text-lg font-mono font-semibold text-rose-600 hover:text-white border-2 border-rose-600
+hover:bg-rose-600 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75  duration-300  focus:bg-transparent mt-2 md:mt-0"
             onClick={handleGptSearch}
           >
             {showGptSearch ? "Home" : "Search"}
           </button>
 
           <img
-            className="w-10 h-10 mx-1"
+            className="w-10 h-10 mx-1 hidden md:inline-block"
             src="https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.jpg"
             alt="usericon"
           />
-          <button className="font-bold text-white" onClick={handleSignOut}>
-            (Sign Out)
+          <button className="font-bold text-white " onClick={handleSignOut}>
+            Sign Out
           </button>
         </div>
       )}

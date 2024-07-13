@@ -94,10 +94,10 @@ const Login = () => {
       </div>
       <div className="absolute inset-0 flex justify-center items-center">
         <form
-          className="py-9 px-12 bg-black w-96 rounded-lg shadow-lg text-white bg-opacity-80 flex justify-center items-center flex-col"
+          className="py-9 px-12 bg-black md:w-3/12 rounded-lg shadow-lg text-white bg-opacity-80 flex justify-center items-center flex-col"
           onSubmit={(e) => e.preventDefault()}
         >
-          <h1 className="font-bold text-3xl py-3 ">
+          <h1 className="font-bold md:text-3xl py-3 text-xl">
             {isSignIn ? "Sign In" : "Sign Up"}
           </h1>
           {!isSignIn && (

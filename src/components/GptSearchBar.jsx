@@ -52,7 +52,7 @@ const GptSearchBar = () => {
     dispatch(addGptResult(payload)); // Ensure correct naming here
   };
   return (
-    <div className="pt-[32%] md:pt-[10%] flex justify-center">
+    <div className="pt-[40%] md:pt-[10%] flex justify-center">
       <form
         className="w-[98%] md:w-1/2 bg-black grid grid-cols-12 bg-opacity-60"
         onSubmit={(e) => e.preventDefault()}

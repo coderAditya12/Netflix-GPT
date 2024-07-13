@@ -50,7 +50,7 @@ const Header = () => {
   };
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   return (
-    <div className="absolute px-8 py-2  bg-gradient-to-b from-black to-transparent w-full  z-10 flex  flex-col md:flex-row justify-between items-center bg-opacity-40 bg-black sm:bg-blue-900 md:bg-green-900">
+    <div className="absolute px-8 py-2  bg-gradient-to-b from-black to-transparent w-full  z-10 flex  flex-col md:flex-row justify-between items-center bg-opacity-40 bg-black ">
       <img className="w-40" src={LOGO} alt="logo" />
       {user && (
         <div className="flex items-center px-2 justify-between w-[70%] md:w-auto ">

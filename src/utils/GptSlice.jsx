@@ -4,19 +4,21 @@ const gptSlice = createSlice({
   name: "gpt",
   initialState: {
     showGptSearch: false,
-    movieResult: null,
-    movieNames: null,
+    movieResult: [],
+    movieNames: [],
   },
   reducers: {
-    toggleGptSearch: (state, action) => {
+    toggleGptSearch: (state) => {
       state.showGptSearch = !state.showGptSearch;
     },
     addGptResult: (state, action) => {
-      const { movieName, movieResult } = action.payload;
-      state.movieResult = action.payload;
-      state.movieNames = action.payload;
+      const { movieNames, movieResult } = action.payload;
+      console.log("Reducer received payload:", action.payload); // Add this line for debugging
+      state.movieResult = movieResult;
+      state.movieNames = movieNames;
     },
   },
 });
+
 export const { toggleGptSearch, addGptResult } = gptSlice.actions;
 export default gptSlice.reducer;

@@ -20,10 +20,11 @@ const GptSearchBar = () => {
       options
     );
     const json = await data.json();
-    return json;
+    // console.log("json", json);
+    return json.results;
   };
   const handleSearch = async () => {
-    console.log(searchText.current.value);
+    // console.log(searchText.current.value);
     // make an api call to gemini to get movie result
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -39,13 +40,16 @@ const GptSearchBar = () => {
     console.log(text);
 
     const movieList = text.split(",");
-    console.log(movieList);
+    // console.log(movieList);
 
     const promiseArray = movieList.map((movie) => searchMovie(movie));
-    console.log(promiseArray);
+    // console.log(promiseArray);
     const tmdbResult = await Promise.all(promiseArray);
-    console.log(tmdbResult);
-    dispatch(addGptResult({ movieResult: tmdbResult, movieName: movieList }));
+    // console.log("tmdbREsult", tmdbResult);
+    // dispatch(addGptResult({ movieResult: tmdbResult, movieNames: movieList }));
+    const payload = { movieResult: tmdbResult, movieNames: movieList };
+    // console.log("Dispatching payload:", payload);
+    dispatch(addGptResult(payload)); // Ensure correct naming here
   };
   return (
     <div className="pt-[7%] flex justify-center">

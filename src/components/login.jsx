@@ -30,10 +30,10 @@ const Login = () => {
     const passwordValue = password.current.value;
     const numberValue = isSignIn ? null : number.current.value;
 
-    let message = "";
-    if (!isSignIn) {
-      message = Validate(emailValue, passwordValue);
-    }
+    let message = Validate(emailValue, passwordValue, numberValue);
+    setErrorMessage(message);
+    if (message) return;
+
     if (!isSignIn) {
       // Sign Up logic
       createUserWithEmailAndPassword(auth, emailValue, passwordValue)
